@@ -1,2 +1,2 @@
 # dotfiles
-nvim, zsh, tmux dotfiles
+nvim, zsh, tmux, vimperator dotfiles
