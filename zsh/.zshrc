@@ -5,7 +5,7 @@
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+ZSH_THEME="gentoo"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/gcc-arm-none-eabi-4_9-2015q3/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/gcc-arm-none-eabi-4_9-2015q3/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -82,18 +82,3 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /opt/ros/jade/setup.zsh
-alias matlab="/usr/local/MATLAB/R2015b/bin/matlab -desktop"
-alias gcc14="export PATH=/opt/gcc-arm-none-eabi-4_7-2014q2/bin:$PATH"
-export CLASSPATH=$CLASSPATH:/usr/share/java/gluegen-rt.jar:/usr/local/share/java/lcm.jar:$HOME/april/java/april.jar:./
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/april/lib
-alias java='java -ea -server'
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
-# Set the plugin path so Gazebo finds our model and sim
-export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:$HOME/Workspace/vayu/vayupx4firmware/Tools/sitl_gazebo/Build:$HOME/Workspace/vayu/Firmware/Tools/sitl_gazebo/Build
-# Set the model path so Gazebo finds the airframes
-export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:$HOME/Workspace/vayu/vayupx4firmware/Tools/sitl_gazebo/models:$HOME/Workspace/vayu/Firmware/Tools/sitl_gazebo/models
-# # Disable online model lookup since this is quite experimental and unstable
-export GAZEBO_MODEL_DATABASE_URI=""
-alias vim="nvim"
-alias vi="nvim"
