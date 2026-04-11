@@ -1,84 +1,86 @@
-# Path to your oh-my-zsh installation.
-  export ZSH=/home/nkhoit/.oh-my-zsh
+#!/usr/bin/env zsh
+# ~/.zshrc — managed by dotfiles
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="gentoo"
+# ---------------------------------------------------------------------------
+# Plugin manager (manual, no framework)
+# ---------------------------------------------------------------------------
+ZSH_PLUGIN_DIR="${HOME}/.local/share/zsh/plugins"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+_ensure_plugin() {
+  local repo="$1" name="${1##*/}"
+  if [[ ! -d "${ZSH_PLUGIN_DIR}/${name}" ]]; then
+    echo "Installing zsh plugin: ${name}..."
+    git clone --depth=1 "https://github.com/${repo}.git" "${ZSH_PLUGIN_DIR}/${name}"
+  fi
+  source "${ZSH_PLUGIN_DIR}/${name}/${name}.zsh" 2>/dev/null \
+    || source "${ZSH_PLUGIN_DIR}/${name}/${name}.plugin.zsh" 2>/dev/null
+}
 
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+_ensure_plugin zsh-users/zsh-autosuggestions
+_ensure_plugin zsh-users/zsh-syntax-highlighting
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+# ---------------------------------------------------------------------------
+# History
+# ---------------------------------------------------------------------------
+HISTFILE="${HOME}/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt HIST_IGNORE_ALL_DUPS SHARE_HISTORY HIST_REDUCE_BLANKS APPEND_HISTORY INC_APPEND_HISTORY
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+# ---------------------------------------------------------------------------
+# Completion
+# ---------------------------------------------------------------------------
+autoload -Uz compinit && compinit -C
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
+# ---------------------------------------------------------------------------
+# Key bindings
+# ---------------------------------------------------------------------------
+bindkey -e                           # emacs mode
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+# ---------------------------------------------------------------------------
+# fzf integration
+# ---------------------------------------------------------------------------
+if command -v fzf &>/dev/null; then
+  # fzf 0.48+ ships a built-in shell integration
+  if [[ -f "${HOME}/.fzf.zsh" ]]; then
+    source "${HOME}/.fzf.zsh"
+  else
+    eval "$(fzf --zsh 2>/dev/null)" || true
+  fi
+  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+  if command -v fd &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  fi
+fi
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+# ---------------------------------------------------------------------------
+# Aliases
+# ---------------------------------------------------------------------------
+alias vi='nvim'
+alias vim='nvim'
+alias ll='ls -lAh'
+alias la='ls -A'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias g='git'
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline -20'
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+# ---------------------------------------------------------------------------
+# PATH additions
+# ---------------------------------------------------------------------------
+typeset -U path
+path=(${HOME}/.local/bin ${HOME}/.cargo/bin $path)
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-
-# User configuration
-
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/gcc-arm-none-eabi-4_9-2015q3/bin"
-# export MANPATH="/usr/local/man:$MANPATH"
-
-source $ZSH/oh-my-zsh.sh
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# ---------------------------------------------------------------------------
+# Starship prompt (load last)
+# ---------------------------------------------------------------------------
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
