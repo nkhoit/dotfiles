@@ -178,7 +178,7 @@ create_symlinks() {
   link_file "${DOTFILES_DIR}/zsh/.zshrc"             "${HOME}/.zshrc"
 
   # GitHub Copilot CLI global instructions
-  link_file "${DOTFILES_DIR}/copilot/instructions.md" "${HOME}/.copilot/instructions.md"
+  link_file "${DOTFILES_DIR}/copilot/copilot-instructions.md" "${HOME}/.copilot/copilot-instructions.md"
 }
 
 # ---------------------------------------------------------------------------

@@ -165,7 +165,7 @@ function Create-Symlinks {
     # GitHub Copilot CLI global instructions
     $copilotDir = Join-Path $HOME '.copilot'
     if (-not (Test-Path $copilotDir)) { New-Item -ItemType Directory -Path $copilotDir -Force | Out-Null }
-    Link-Config (Join-Path $DotfilesDir 'copilot\instructions.md') (Join-Path $copilotDir 'instructions.md')
+    Link-Config (Join-Path $DotfilesDir 'copilot\copilot-instructions.md') (Join-Path $copilotDir 'copilot-instructions.md')
 }
 
 # ===========================================================================
