@@ -45,6 +45,12 @@ Before committing, verify:
 └── zsh/                # Zsh config — macOS/Linux only
 ```
 
+## Shell
+
+- **macOS/Ubuntu:** Zsh is the preferred shell. The install script sets it as the default via `chsh`. macOS already defaults to zsh; Ubuntu defaults to bash and needs the switch.
+- **Windows:** PowerShell. No need to change the default shell.
+- Zsh plugins (autosuggestions, syntax-highlighting) are installed to `~/.local/share/zsh/plugins/` on all Unix platforms — not via brew or apt — so the `.zshrc` stays platform-agnostic.
+
 ## Anti-Patterns
 
 - Don't add a tool without adding it to install scripts on all supported platforms.
