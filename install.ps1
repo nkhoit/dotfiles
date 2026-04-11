@@ -161,6 +161,11 @@ function Create-Symlinks {
     $profileDir = Split-Path $PROFILE -Parent
     if (-not (Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'powershell\Microsoft.PowerShell_profile.ps1') $PROFILE
+
+    # GitHub Copilot CLI global instructions
+    $copilotDir = Join-Path $HOME '.copilot'
+    if (-not (Test-Path $copilotDir)) { New-Item -ItemType Directory -Path $copilotDir -Force | Out-Null }
+    Link-Config (Join-Path $DotfilesDir 'copilot\instructions.md') (Join-Path $copilotDir 'instructions.md')
 }
 
 # ===========================================================================

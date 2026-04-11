@@ -176,6 +176,9 @@ create_symlinks() {
   link_file "${DOTFILES_DIR}/starship/starship.toml" "${HOME}/.config/starship.toml"
   link_file "${DOTFILES_DIR}/zellij/config.kdl"      "${HOME}/.config/zellij/config.kdl"
   link_file "${DOTFILES_DIR}/zsh/.zshrc"             "${HOME}/.zshrc"
+
+  # GitHub Copilot CLI global instructions
+  link_file "${DOTFILES_DIR}/copilot/instructions.md" "${HOME}/.copilot/instructions.md"
 }
 
 # ---------------------------------------------------------------------------

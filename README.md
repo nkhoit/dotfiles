@@ -43,6 +43,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | `zellij/config.kdl` | `~/.config/zellij/config.kdl` |
 | `zsh/.zshrc` | `~/.zshrc` |
 | `powershell/...profile.ps1` | `$PROFILE` |
+| `copilot/instructions.md` | `~/.copilot/instructions.md` |
 
 Existing configs are backed up with a `.backup.<timestamp>` suffix before linking.
 
@@ -54,6 +55,7 @@ Existing configs are backed up with a `.backup.<timestamp>` suffix before linkin
 ├── nvim/                   # Neovim (LazyVim) config
 ├── starship/               # Starship prompt config
 ├── zellij/                 # Zellij terminal multiplexer config
+├── copilot/                # GitHub Copilot CLI global instructions
 ├── powershell/             # PowerShell profile (Windows)
 └── zsh/                    # Zsh config (macOS/Linux)
 ```
