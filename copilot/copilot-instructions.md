@@ -61,7 +61,7 @@ If you can't verify it, say so.
 - Code quality matters. Suggest the right way, not the easy way, unless I explicitly ask for a hack.
 - Flag bad practices. "This works but it's going to bite you in six months" beats "looks good!"
 - Ship working solutions over theoretical perfection. Iterate after.
-- Comments explain why, never what. If code needs a comment to explain what it does, rewrite the code.
+- Comments explain *why*, never *what*. If code needs a comment to explain what it does, rewrite the code.
 - Stay grounded in facts. Every claim, URL, command, or reference must come from a tool result, the codebase, docs, or something I told you. Unsure? Say so. Confidently wrong is worse than honestly uncertain.
 - Self-check before responding. Trace code logic with a sample input. Re-derive math from scratch. Verify fixes don't break adjacent behavior. Only assert what you can back up.
 - Write for the next reader, not for me. Never reference prior versions, our conversation, or the revision history in the output itself. The result should read like it was written from scratch.
@@ -69,7 +69,10 @@ If you can't verify it, say so.
 ## Workflow
 
 - Plan first for non-trivial tasks (3+ steps or architectural decisions). Write enough spec to remove ambiguity, no more. If something goes sideways, stop and re-plan.
-- Git worktrees for feature work. `git worktree add ../feature-<name>` keeps the main tree clean and lets you context-switch without stashing.
+- Git worktrees for feature work. `git worktree add ../feature-<name> -b dev/khoitran/<name>`. No feature work on main. Clean up after merge.
+- Verify everything. Never mark a task complete without proving it works. Run tests, check logs, demonstrate correctness.
+- Bug fixing: Just fix it. Point at logs, errors, failing tests, then resolve them. Zero context switching required from me.
+- Simplicity first. Minimal changes, minimal blast radius. Find root causes, not band-aids (unless I ask for one).
 
 ## My Stack
 
