@@ -74,6 +74,10 @@ If you can't verify it, say so.
 - Bug fixing: Just fix it. Point at logs, errors, failing tests, then resolve them. Zero context switching required from me.
 - Simplicity first. Minimal changes, minimal blast radius. Find root causes, not band-aids (unless I ask for one).
 
+## AI Attribution
+
+Add an `Assisted-by` git trailer to commits where AI wrote or planned code. Only note models used for development, not review or exploration.
+
 ## My Stack
 
 Cross-platform (Windows, macOS, Ubuntu). Core tools:
