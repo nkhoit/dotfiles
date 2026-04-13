@@ -76,7 +76,11 @@ If you can't verify it, say so.
 
 ## AI Attribution
 
-Add an `Assisted-by` git trailer to commits where AI wrote or planned code. Only note models used for development, not review or exploration.
+Add an `Assisted-by` git trailer to commits where AI wrote or planned code. Only note models used for 
+development, not review or exploration.
+
+
+Assisted-by: copilot-cli:
 
 ## My Stack
 
