@@ -35,11 +35,33 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # ---------------------------------------------------------------------------
-# Key bindings
+# Key bindings (vi mode)
 # ---------------------------------------------------------------------------
-bindkey -e                           # emacs mode
+bindkey -v
+KEYTIMEOUT=1
+
+# Cursor shape: beam for insert, block for normal
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] || [[ $1 == 'block' ]]; then
+    echo -ne '\e[2 q'
+  elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] || [[ $1 == 'beam' ]]; then
+    echo -ne '\e[6 q'
+  fi
+}
+zle -N zle-keymap-select
+
+function zle-line-init {
+  echo -ne '\e[6 q'
+}
+zle -N zle-line-init
+
+# Restore useful bindings in insert mode
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
+bindkey '^?' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^a' beginning-of-line
+bindkey '^e' end-of-line
 
 # ---------------------------------------------------------------------------
 # fzf integration

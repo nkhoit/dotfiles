@@ -5,21 +5,19 @@ Set-Alias -Name vim -Value nvim
 
 function copilot { & copilot.exe --yolo @args }
 
-# --- zsh-like behavior ---
+# --- Vi mode ---
+Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineOption -ViModeIndicator Cursor
 
-# Silence the bell
+# --- Shell behavior ---
 Set-PSReadLineOption -BellStyle None
-
-# History-based autocomplete (inline ghost text like zsh-autosuggestions)
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle InlineView
-
-# Up/Down searches history based on what you've already typed (like zsh)
-Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
-Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 
-# Tab = zsh-style menu completion (cycle through matches)
+# Keep familiar shortcuts in insert mode
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadLineKeyHandler -Key Shift+Tab -Function MenuComplete
 
