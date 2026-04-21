@@ -1,0 +1,13 @@
+# Neovide launch defaults — shared across Windows, macOS, and Linux.
+# Symlinked to:
+#   Windows: %APPDATA%\neovide\config.toml
+#   macOS:   ~/.config/neovide/config.toml
+#   Linux:   ${XDG_CONFIG_HOME:-~/.config}/neovide/config.toml
+#
+# See https://neovide.dev/config-file.html for all options.
+
+fork = true
+frame = "full"
+maximized = false
+no-tabs = true
+srgb = true

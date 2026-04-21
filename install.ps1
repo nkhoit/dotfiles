@@ -62,6 +62,7 @@ function Install-Packages {
 
     Install-WingetPackage 'Git.Git'           'Git'
     Install-WingetPackage 'Neovim.Neovim'     'Neovim'
+    Install-WingetPackage 'Neovide.Neovide'   'Neovide'
     Install-WingetPackage 'Starship.Starship'  'Starship'
     Install-WingetPackage 'junegunn.fzf'       'fzf'
     Install-WingetPackage 'BurntSushi.ripgrep.MSVC' 'ripgrep'
@@ -152,6 +153,9 @@ function Create-Symlinks {
 
     # Neovim
     Link-Config (Join-Path $DotfilesDir 'nvim') (Join-Path $env:LOCALAPPDATA 'nvim')
+
+    # Neovide (uses %APPDATA%\neovide on Windows)
+    Link-Config (Join-Path $DotfilesDir 'neovide\config.toml') (Join-Path $env:APPDATA 'neovide\config.toml')
 
     # Starship
     $starshipDir = Join-Path $HOME '.config'
