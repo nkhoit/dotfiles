@@ -2,7 +2,7 @@
 
 Cross-platform dev environment setup — Windows, macOS, Ubuntu.
 
-**Stack:** Neovim (LazyVim) · Zellij · Starship · PowerShell (Win) / Zsh (Unix) · fzf
+**Stack:** Neovim (LazyVim) · Neovide (GUI) · Zellij · Starship · PowerShell (Win) / Zsh (Unix) · fzf
 
 ## Quick Start
 
@@ -25,6 +25,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | Tool | macOS | Ubuntu | Windows |
 |------|-------|--------|---------|
 | **Neovim** | brew | GitHub release | winget |
+| **Neovide** | brew cask | GitHub release (x86_64) | winget |
 | **Starship** | brew | installer script | winget |
 | **Zellij** | brew | GitHub release | — |
 | **fzf** | brew | git clone | winget |
@@ -39,6 +40,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | Config | Destination |
 |--------|-------------|
 | `nvim/` | `~/.config/nvim` (Unix) · `%LOCALAPPDATA%\nvim` (Win) |
+| `neovide/config.toml` | `~/.config/neovide/config.toml` (Unix, respects `$XDG_CONFIG_HOME`) · `%APPDATA%\neovide\config.toml` (Win) |
 | `starship/starship.toml` | `~/.config/starship.toml` |
 | `zellij/config.kdl` | `~/.config/zellij/config.kdl` |
 | `zsh/.zshrc` | `~/.zshrc` |
@@ -53,6 +55,7 @@ Existing configs are backed up with a `.backup.<timestamp>` suffix before linkin
 ├── install.sh              # macOS/Linux installer
 ├── install.ps1             # Windows installer
 ├── nvim/                   # Neovim (LazyVim) config
+├── neovide/                # Neovide GUI launch defaults
 ├── starship/               # Starship prompt config
 ├── zellij/                 # Zellij terminal multiplexer config
 ├── copilot/                # GitHub Copilot CLI global instructions

@@ -70,6 +70,13 @@ install_packages_macos() {
   fi
   # Nerd Font for starship/LazyVim icons
   brew install --cask font-jetbrains-mono-nerd-font 2>/dev/null || true
+
+  # Neovide (GUI for Neovim)
+  if ! brew list --cask neovide &>/dev/null; then
+    info "Installing Neovide..."
+    brew install --cask neovide
+  fi
+
   ok "macOS packages installed"
 }
 
@@ -131,6 +138,33 @@ install_packages_debian() {
     fc-cache -f "$FONT_DIR"
   fi
 
+  # Neovide (GUI for Neovim) — x86_64 prebuilt tarball from GitHub releases
+  if ! command_exists neovide; then
+    ARCH="$(uname -m)"
+    if [[ "$ARCH" == "x86_64" ]]; then
+      info "Installing Neovide from GitHub releases..."
+      NEOVIDE_URL=$(curl -fsSL https://api.github.com/repos/neovide/neovide/releases/latest \
+        | grep -oP '"browser_download_url":\s*"\K[^"]*neovide-linux-x86_64\.tar\.gz')
+      if [[ -n "$NEOVIDE_URL" ]]; then
+        mkdir -p "${HOME}/.local/bin"
+        TMP_NEOVIDE="$(mktemp -d)"
+        curl -fsSL "$NEOVIDE_URL" | tar xz -C "$TMP_NEOVIDE"
+        # Tarball ships a single `neovide` binary (sometimes nested in a dir)
+        NEOVIDE_BIN="$(find "$TMP_NEOVIDE" -type f -name neovide | head -1)"
+        if [[ -n "$NEOVIDE_BIN" ]]; then
+          install -m 0755 "$NEOVIDE_BIN" "${HOME}/.local/bin/neovide"
+        else
+          warn "Could not locate neovide binary in downloaded archive — skipping"
+        fi
+        rm -rf "$TMP_NEOVIDE"
+      else
+        warn "Could not resolve Neovide download URL — skipping"
+      fi
+    else
+      warn "Neovide prebuilt binary not available for arch '${ARCH}' — skipping"
+    fi
+  fi
+
   ok "Ubuntu/Debian packages installed"
 }
 
@@ -176,6 +210,10 @@ create_symlinks() {
   link_file "${DOTFILES_DIR}/starship/starship.toml" "${HOME}/.config/starship.toml"
   link_file "${DOTFILES_DIR}/zellij/config.kdl"      "${HOME}/.config/zellij/config.kdl"
   link_file "${DOTFILES_DIR}/zsh/.zshrc"             "${HOME}/.zshrc"
+
+  # Neovide config (respects XDG_CONFIG_HOME on Linux; macOS uses ~/.config)
+  NEOVIDE_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/neovide"
+  link_file "${DOTFILES_DIR}/neovide/config.toml"    "${NEOVIDE_CONFIG_DIR}/config.toml"
 
   # GitHub Copilot CLI global instructions
   link_file "${DOTFILES_DIR}/copilot/copilot-instructions.md" "${HOME}/.copilot/copilot-instructions.md"
