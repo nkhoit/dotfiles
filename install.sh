@@ -215,8 +215,9 @@ create_symlinks() {
   NEOVIDE_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/neovide"
   link_file "${DOTFILES_DIR}/neovide/config.toml"    "${NEOVIDE_CONFIG_DIR}/config.toml"
 
-  # GitHub Copilot CLI global instructions
-  link_file "${DOTFILES_DIR}/copilot/copilot-instructions.md" "${HOME}/.copilot/copilot-instructions.md"
+  # AI agent instructions (shared by Copilot CLI and opencode)
+  link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.copilot/copilot-instructions.md"
+  link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.config/opencode/AGENTS.md"
 }
 
 # ---------------------------------------------------------------------------

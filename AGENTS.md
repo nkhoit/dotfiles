@@ -7,7 +7,7 @@ Cross-platform dotfiles repo targeting **Windows, macOS, and Ubuntu**. Every cha
 1. **Prefer platform-agnostic solutions.** If a tool/config works identically on all three OSes, use it. Don't split by platform unless forced to.
 2. **When platform-specific code is unavoidable**, implement all three (Windows, macOS, Ubuntu) — not just the one being tested. Document *why* the split is necessary.
 3. **Shell scripts come in pairs:** `install.sh` (macOS + Ubuntu) and `install.ps1` (Windows). Keep them in sync — a feature in one must exist in the other.
-4. **Configs that are identical across platforms** live once, symlinked everywhere (nvim, starship, copilot). Don't duplicate.
+4. **Configs that are identical across platforms** live once, symlinked everywhere (nvim, starship, ai). Don't duplicate.
 5. **Configs that differ by platform** get their own directory (powershell/, zsh/). The install scripts handle routing.
 
 ## Package Installation
@@ -39,7 +39,7 @@ Before committing, verify:
 ├── install.ps1         # Windows bootstrap
 ├── nvim/               # Neovim — identical on all platforms
 ├── starship/           # Starship prompt — identical on all platforms
-├── copilot/            # GitHub Copilot CLI — identical on all platforms
+├── ai/                 # Shared AI agent instructions (Copilot CLI + opencode)
 ├── zellij/             # Zellij — macOS/Linux only
 ├── powershell/         # PowerShell profile — Windows only
 └── zsh/                # Zsh config — macOS/Linux only
