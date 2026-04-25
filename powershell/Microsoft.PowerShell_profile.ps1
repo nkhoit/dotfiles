@@ -2,10 +2,9 @@ if ($Host.Name -eq 'ConsoleHost') {
     Invoke-Expression (&starship init powershell)
 }
 
-# ----- ComfyUI skill (per-machine overrides — defaults are sensible) -----
-$env:COMFYUI_ENDPOINT  = 'http://node.story-nessie.ts.net:8188'
-$env:COMFYUI_OUTPUT_DIR = Join-Path $HOME 'OneDrive\Pictures\comfyui-generated'
-$env:COMFYUI_CHAR_DB    = Join-Path $HOME 'clawd\anime-char-db'
+# ----- Local overrides (not versioned) — env vars, machine-specific aliases, etc. -----
+$localProfile = "$PROFILE.local"
+if (Test-Path $localProfile) { . "$localProfile" }
 
 # ----- PSReadLine: Vi mode -----
 # Skip PSReadLine in neovim's embedded terminal (redirected I/O breaks predictions)
