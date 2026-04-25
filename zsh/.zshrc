@@ -102,6 +102,14 @@ typeset -U path
 path=(${HOME}/.local/bin ${HOME}/.cargo/bin $path)
 
 # ---------------------------------------------------------------------------
+# ComfyUI skill (per-machine overrides — defaults are sensible)
+# ---------------------------------------------------------------------------
+export COMFYUI_ENDPOINT="http://node.story-nessie.ts.net:8188"
+# COMFYUI_OUTPUT_DIR defaults to ~/Pictures/comfyui-generated — uncomment to override
+# export COMFYUI_OUTPUT_DIR="${HOME}/Pictures/comfyui-generated"
+# export COMFYUI_CHAR_DB="${HOME}/anime-char-db"
+
+# ---------------------------------------------------------------------------
 # Starship prompt (load last)
 # ---------------------------------------------------------------------------
 if command -v starship &>/dev/null; then

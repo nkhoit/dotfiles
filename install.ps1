@@ -90,6 +90,13 @@ function Install-Packages {
         Write-Info "Installing PSFzf PowerShell module..."
         Install-Module -Name PSFzf -Scope CurrentUser -Force -AcceptLicense
     }
+
+    # Python deps for ComfyUI skill
+    if (Test-Command python) {
+        Write-Info "Installing Python deps for skills (pillow)..."
+        python -m pip install --user --upgrade --quiet pillow 2>$null
+        if ($LASTEXITCODE -ne 0) { Write-Warn "pillow install failed (comfyui skill download-ref will need it)" }
+    }
     Write-Ok "All packages installed"
 }
 
@@ -174,6 +181,17 @@ function Create-Symlinks {
     $opencodeDir = Join-Path $HOME '.config\opencode'
     if (-not (Test-Path $opencodeDir)) { New-Item -ItemType Directory -Path $opencodeDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $opencodeDir 'AGENTS.md')
+
+    # AI agent skills (shared by Copilot CLI and opencode)
+    $copilotSkillsDir  = Join-Path $copilotDir 'skills'
+    $opencodeSkillsDir = Join-Path $opencodeDir 'skills'
+    foreach ($d in @($copilotSkillsDir, $opencodeSkillsDir)) {
+        if (-not (Test-Path $d)) { New-Item -ItemType Directory -Path $d -Force | Out-Null }
+    }
+    Get-ChildItem (Join-Path $DotfilesDir 'ai\skills') -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+        Link-Config $_.FullName (Join-Path $copilotSkillsDir  $_.Name)
+        Link-Config $_.FullName (Join-Path $opencodeSkillsDir $_.Name)
+    }
 }
 
 # ===========================================================================

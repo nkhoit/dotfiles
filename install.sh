@@ -169,6 +169,17 @@ install_packages_debian() {
 }
 
 # ---------------------------------------------------------------------------
+# Python deps for skills
+# ---------------------------------------------------------------------------
+install_skill_deps() {
+  if command_exists python3; then
+    info "Installing Python deps for skills (pillow)..."
+    python3 -m pip install --user --upgrade --quiet pillow 2>/dev/null \
+      || warn "pillow install failed (comfyui skill download-ref will need it)"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Clone / update dotfiles repo
 # ---------------------------------------------------------------------------
 setup_dotfiles_repo() {
@@ -218,6 +229,14 @@ create_symlinks() {
   # AI agent instructions (shared by Copilot CLI and opencode)
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.copilot/copilot-instructions.md"
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.config/opencode/AGENTS.md"
+
+  # AI agent skills (shared by Copilot CLI and opencode)
+  for skill_dir in "${DOTFILES_DIR}/ai/skills"/*/; do
+    [ -d "$skill_dir" ] || continue
+    skill_name="$(basename "$skill_dir")"
+    link_file "$skill_dir" "${HOME}/.copilot/skills/${skill_name}"
+    link_file "$skill_dir" "${HOME}/.config/opencode/skills/${skill_name}"
+  done
 }
 
 # ---------------------------------------------------------------------------
@@ -246,6 +265,7 @@ main() {
 
   setup_dotfiles_repo
   create_symlinks
+  install_skill_deps
   set_default_shell
 
   echo ""
