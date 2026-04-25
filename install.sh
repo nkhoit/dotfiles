@@ -69,7 +69,7 @@ install_packages_macos() {
     brew install zellij
   fi
   # Nerd Font for starship/LazyVim icons
-  brew install --cask font-jetbrains-mono-nerd-font 2>/dev/null || true
+  brew install --cask font-caskaydia-cove-nerd-font 2>/dev/null || true
 
   # Neovide (GUI for Neovim)
   if ! brew list --cask neovide &>/dev/null; then
@@ -127,13 +127,13 @@ install_packages_debian() {
     sudo install /tmp/zellij /usr/local/bin/zellij
   fi
 
-  # Nerd Font (JetBrains Mono)
+  # Nerd Font (CaskaydiaCove)
   FONT_DIR="${HOME}/.local/share/fonts"
-  if [ ! -f "${FONT_DIR}/JetBrainsMonoNerdFont-Regular.ttf" ]; then
-    info "Installing JetBrains Mono Nerd Font..."
+  if [ ! -f "${FONT_DIR}/CaskaydiaCoveNerdFont-Regular.ttf" ]; then
+    info "Installing CaskaydiaCove Nerd Font..."
     mkdir -p "$FONT_DIR"
     FONT_URL=$(curl -fsSL https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest \
-      | grep -oP '"browser_download_url":\s*"\K[^"]*JetBrainsMono\.tar\.xz')
+      | grep -oP '"browser_download_url":\s*"\K[^"]*CascadiaCode\.tar\.xz')
     curl -fsSL "$FONT_URL" | tar xJ -C "$FONT_DIR"
     fc-cache -f "$FONT_DIR"
   fi

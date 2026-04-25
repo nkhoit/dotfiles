@@ -33,7 +33,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | **fd** | brew | apt | winget |
 | **Node.js** | brew | NodeSource | winget |
 | **Python** | brew | apt | winget |
-| **JetBrains Mono Nerd Font** | brew cask | GitHub release | winget |
+| **CaskaydiaCove Nerd Font** | brew cask | GitHub release | GitHub release |
 
 ## What Gets Linked
 
@@ -65,7 +65,7 @@ Existing configs are backed up with a `.backup.<timestamp>` suffix before linkin
 
 ## Manual Steps After Install
 
-1. **Set your terminal font** to `JetBrainsMono Nerd Font` for icons to render
+1. **Set your terminal font** to `CaskaydiaCove Nerd Font` for icons to render
 2. **Neovim plugins** install automatically on first launch — just run `nvim`
 3. **Zsh plugins** (autosuggestions, syntax-highlighting) install on first shell open
 4. **Per-machine overrides** — drop env vars or aliases in `~/.zshrc.local` (Unix) or `$PROFILE.local` (Windows). Both are sourced by the main shell config and intentionally not versioned.

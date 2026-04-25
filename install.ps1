@@ -74,14 +74,37 @@ function Install-Packages {
     $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' +
                 [System.Environment]::GetEnvironmentVariable('Path', 'User')
 
-    # Nerd Font (JetBrains Mono)
+    # Nerd Font (CaskaydiaCove) — install from Nerd Fonts GitHub release
     $fontDir = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
-    if (-not (Test-Path (Join-Path $fontDir 'JetBrainsMonoNerdFont-Regular.ttf'))) {
-        Write-Info "Installing JetBrains Mono Nerd Font..."
+    if (-not (Test-Path (Join-Path $fontDir 'CaskaydiaCoveNerdFont-Regular.ttf'))) {
+        Write-Info "Installing CaskaydiaCove Nerd Font..."
         try {
-            winget install --id 'DEVCOM.JetBrainsMonoNerdFont' --accept-source-agreements --accept-package-agreements --silent 2>$null
+            $release = Invoke-RestMethod 'https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest'
+            $asset = $release.assets | Where-Object { $_.name -eq 'CascadiaCode.zip' } | Select-Object -First 1
+            if (-not $asset) { throw "CascadiaCode.zip not found in latest Nerd Fonts release" }
+
+            $tmpZip = Join-Path $env:TEMP 'CascadiaCode-NerdFont.zip'
+            $tmpDir = Join-Path $env:TEMP 'CascadiaCode-NerdFont'
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $tmpZip -UseBasicParsing
+            if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force }
+            Expand-Archive -Path $tmpZip -DestinationPath $tmpDir -Force
+
+            if (-not (Test-Path $fontDir)) { New-Item -ItemType Directory -Path $fontDir -Force | Out-Null }
+            $regPath = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
+            if (-not (Test-Path $regPath)) { New-Item $regPath -Force | Out-Null }
+            Get-ChildItem $tmpDir -Filter '*.ttf' | ForEach-Object {
+                $dest = Join-Path $fontDir $_.Name
+                if (-not (Test-Path $dest)) { Copy-Item $_.FullName $dest -Force }
+                # Register per-user so apps see the font without admin/relog
+                $regName = "$($_.BaseName) (TrueType)"
+                if (-not (Get-ItemProperty -Path $regPath -Name $regName -ErrorAction SilentlyContinue)) {
+                    New-ItemProperty -Path $regPath -Name $regName -Value $dest -PropertyType String -Force | Out-Null
+                }
+            }
+            Remove-Item $tmpZip, $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
         } catch {
-            Write-Warn "Could not auto-install Nerd Font — install manually from https://www.nerdfonts.com"
+            Write-Warn "Could not auto-install CaskaydiaCove Nerd Font: $($_.Exception.Message)"
+            Write-Warn "Install manually from https://github.com/ryanoasis/nerd-fonts/releases"
         }
     }
 
