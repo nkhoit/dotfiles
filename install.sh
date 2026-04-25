@@ -9,8 +9,8 @@ set -euo pipefail
 #   git clone git@github.com:nkhoit/dotfiles.git ~/.dotfiles && ~/.dotfiles/install.sh
 # ===========================================================================
 
-DOTFILES_DIR="${HOME}/.dotfiles"
-DOTFILES_REPO="https://github.com/nkhoit/dotfiles.git"
+DOTFILES_DIR="${DOTFILES_DIR:-${HOME}/.dotfiles}"
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/nkhoit/dotfiles.git}"
 
 # ---------------------------------------------------------------------------
 # Helpers

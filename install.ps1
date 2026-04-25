@@ -15,8 +15,8 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$DotfilesDir = Join-Path $HOME '.dotfiles'
-$DotfilesRepo = 'https://github.com/nkhoit/dotfiles.git'
+$DotfilesDir = if ($env:DOTFILES_DIR) { $env:DOTFILES_DIR } else { Join-Path $HOME '.dotfiles' }
+$DotfilesRepo = if ($env:DOTFILES_REPO) { $env:DOTFILES_REPO } else { 'https://github.com/nkhoit/dotfiles.git' }
 
 # ---------------------------------------------------------------------------
 # Helpers
