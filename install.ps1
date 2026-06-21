@@ -67,6 +67,9 @@ function Install-Packages {
     Install-WingetPackage 'junegunn.fzf'       'fzf'
     Install-WingetPackage 'BurntSushi.ripgrep.MSVC' 'ripgrep'
     Install-WingetPackage 'sharkdp.fd'         'fd'
+    # microsoft/coreutils — native UNIX-style core utilities for Windows (ls, rm, touch, cat, ...).
+    # Windows-only: macOS/Linux already ship coreutils natively, so install.sh has no counterpart.
+    Install-WingetPackage 'Microsoft.Coreutils' 'Coreutils'
     Install-WingetPackage 'OpenJS.NodeJS.LTS'  'Node.js'
     Install-WingetPackage 'Python.Python.3.12' 'Python'
 
@@ -185,6 +188,11 @@ function Create-Symlinks {
     Link-Config (Join-Path $DotfilesDir 'starship\starship.toml') (Join-Path $starshipDir 'starship.toml')
 
     # PowerShell profile
+    # Note: the Microsoft.Coreutils installer injects a marked section into the live $PROFILE
+    # and records it in HKLM for re-injection on upgrades. We deliberately supersede that here:
+    # Link-Config backs up the injected file and links our profile, which drops the shadowing
+    # rm/ls aliases so the native coreutils binaries win via PATH (see the profile's coreutils
+    # block). Re-run this script after a coreutils upgrade if it ever re-injects.
     $profileDir = Split-Path $PROFILE -Parent
     if (-not (Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'powershell\Microsoft.PowerShell_profile.ps1') $PROFILE

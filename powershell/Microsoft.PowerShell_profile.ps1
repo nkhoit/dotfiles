@@ -75,14 +75,8 @@ if (Get-Command nvim -ErrorAction SilentlyContinue) {
 
 function copilot { & (Get-Command copilot.exe).Source --yolo @args }
 
-# ----- Linux staples -----
+# ----- Linux staples (not provided by coreutils) -----
 function which { (Get-Command @args).Source }
-function touch { param([Parameter(ValueFromRemainingArguments)]$Path)
-    foreach ($p in $Path) {
-        if (Test-Path $p) { (Get-Item $p).LastWriteTime = Get-Date }
-        else { New-Item $p -ItemType File | Out-Null }
-    }
-}
 function mkcd { param([string]$Dir) New-Item -ItemType Directory -Path $Dir -Force | Out-Null; Set-Location $Dir }
 if (Get-Command rg -ErrorAction SilentlyContinue) { Set-Alias grep rg }
 
@@ -136,75 +130,13 @@ function gwd {
     git branch -D $branch 2>$null
 }
 
-# ----- Unix-like rm -----
-Remove-Alias rm -Force -ErrorAction SilentlyContinue
-
-function rm {
-    param(
-        [switch]$r,
-        [switch]$f,
-        [switch]$rf,
-        [switch]$fr,
-        [Parameter(ValueFromRemainingArguments)]$Path
-    )
-    if (-not $Path) { Write-Error "rm: missing operand"; return }
-
-    $recurse = $r -or $rf -or $fr
-    $force = $f -or $rf -or $fr
-
-    foreach ($p in $Path) {
-        $params = @{ Path = $p; ErrorAction = if ($force) { 'SilentlyContinue' } else { 'Stop' } }
-        if ($recurse) { $params.Recurse = $true }
-        if ($force) { $params.Force = $true; $params.Confirm = $false }
-        Remove-Item @params
-    }
-}
-
-# ----- Linux-like ls -----
-Remove-Alias ls -Force -ErrorAction SilentlyContinue
-
-function ls {
-    param(
-        [switch]$l,
-        [switch]$a,
-        [switch]$la,
-        [switch]$al,
-        [Parameter(ValueFromRemainingArguments)]$Path
-    )
-    $paths = if ($Path) { @($Path) } else { @(".") }
-    $showHidden = $a -or $la -or $al
-    $showDetails = $l -or $la -or $al
-    $multiPath = $paths.Count -gt 1
-
-    foreach ($targetPath in $paths) {
-        if ($multiPath) { Write-Host "${targetPath}:" }
-
-        if ($showHidden) {
-            $items = Get-ChildItem -Path $targetPath -Force
-        } else {
-            $items = Get-ChildItem -Path $targetPath -Force | Where-Object {
-                $_.Name -notlike '.*' -and
-                -not ($_.Attributes -band [IO.FileAttributes]::Hidden) -and
-                -not ($_.Attributes -band [IO.FileAttributes]::System)
-            }
-        }
-
-        if ($showDetails) {
-            $items | Format-Table -AutoSize Mode, LastWriteTime, Length, Name
-        } else {
-            $names = @($items | ForEach-Object { $_.Name })
-            if ($names.Count -eq 0) { if ($multiPath) { Write-Host }; continue }
-            $maxLen = ($names | Measure-Object -Maximum -Property Length).Maximum + 2
-            $width = $Host.UI.RawUI.WindowSize.Width
-            $cols = [Math]::Max(1, [Math]::Floor($width / $maxLen))
-            $i = 0
-            foreach ($name in $names) {
-                Write-Host -NoNewline ($name.PadRight($maxLen))
-                $i++
-                if ($i % $cols -eq 0) { Write-Host }
-            }
-            if ($i % $cols -ne 0) { Write-Host }
-        }
-        if ($multiPath) { Write-Host }
+# ----- Coreutils (microsoft/coreutils): prefer native UNIX commands -----
+# Installed by install.ps1. Most commands (touch, grep, find, ...) resolve straight from PATH,
+# but PowerShell aliases rm -> Remove-Item and ls -> Get-ChildItem, shadowing the native
+# binaries. Drop those aliases when coreutils is present so the real ones win. PATH resolution
+# (not Set-Alias) keeps byte-pipe behavior intact for piping into xargs/find/etc.
+if (Get-Command coreutils-manager -ErrorAction SilentlyContinue) {
+    foreach ($shadowed in 'rm', 'ls') {
+        Remove-Alias $shadowed -Force -ErrorAction SilentlyContinue
     }
 }

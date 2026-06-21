@@ -77,6 +77,10 @@ install_packages_macos() {
     brew install --cask neovide
   fi
 
+  # microsoft/coreutils is Windows-only — macOS ships coreutils natively (BSD; `brew install
+  # coreutils` for GNU). The Windows installer (install.ps1) pulls it via winget to replace the
+  # faked GNU utils in the PowerShell profile; nothing to do here.
+
   ok "macOS packages installed"
 }
 
@@ -164,6 +168,10 @@ install_packages_debian() {
       warn "Neovide prebuilt binary not available for arch '${ARCH}' — skipping"
     fi
   fi
+
+  # microsoft/coreutils is Windows-only — Ubuntu/Debian ship GNU coreutils natively. The Windows
+  # installer (install.ps1) pulls it via winget to replace the faked GNU utils in the PowerShell
+  # profile; nothing to do here.
 
   ok "Ubuntu/Debian packages installed"
 }
