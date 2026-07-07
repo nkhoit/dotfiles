@@ -31,6 +31,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | **fzf** | brew | git clone | winget |
 | **ripgrep** | brew | apt | winget |
 | **fd** | brew | apt | winget |
+| **zoxide** | brew | apt | winget |
 | **Node.js** | brew | NodeSource | winget |
 | **Python** | brew | apt | winget |
 | **CaskaydiaCove Nerd Font** | brew cask | GitHub release | GitHub release |

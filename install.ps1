@@ -70,6 +70,7 @@ function Install-Packages {
     # microsoft/coreutils — native UNIX-style core utilities for Windows (ls, rm, touch, cat, ...).
     # Windows-only: macOS/Linux already ship coreutils natively, so install.sh has no counterpart.
     Install-WingetPackage 'Microsoft.Coreutils' 'Coreutils'
+    Install-WingetPackage 'ajeetdsouza.zoxide' 'zoxide'
     Install-WingetPackage 'OpenJS.NodeJS.LTS'  'Node.js'
     Install-WingetPackage 'Python.Python.3.12' 'Python'
 
@@ -127,7 +128,11 @@ function Setup-DotfilesRepo {
         Write-Info "Updating dotfiles repo..."
         git -C $DotfilesDir pull --rebase --quiet
     } else {
-        if (Test-Path $DotfilesDir) { Remove-Item $DotfilesDir -Recurse -Force }
+        # Never silently delete a non-repo directory (matches install.sh, which
+        # lets git clone fail here rather than destroy whatever's in the way).
+        if (Test-Path $DotfilesDir) {
+            Write-Err "${DotfilesDir} exists but is not a git repo — move it aside and re-run."
+        }
         Write-Info "Cloning dotfiles repo..."
         git clone $DotfilesRepo $DotfilesDir
     }

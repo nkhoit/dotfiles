@@ -63,7 +63,7 @@ install_homebrew() {
 install_packages_macos() {
   install_homebrew
   info "Installing packages via Homebrew..."
-  brew install neovim starship fzf ripgrep fd git curl zsh node python3
+  brew install neovim starship fzf ripgrep fd zoxide git curl zsh node python3
   # Zellij
   if ! command_exists zellij; then
     brew install zellij
@@ -90,7 +90,7 @@ install_packages_debian() {
   sudo apt-get install -y -qq \
     git curl wget unzip tar gzip \
     build-essential \
-    zsh ripgrep fd-find \
+    zsh ripgrep fd-find zoxide \
     python3 python3-pip python3-venv \
     xclip
 
@@ -102,7 +102,9 @@ install_packages_debian() {
   fi
 
   # Neovim (latest stable from GitHub releases — apt version is often outdated)
-  if ! command_exists nvim || [[ "$(nvim --version | head -1 | grep -oP '\d+\.\d+')" < "0.10" ]]; then
+  # Version compare via sort -V: a lexical [[ < ]] misorders "0.9" vs "0.10".
+  NVIM_VER="$( { command_exists nvim && nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+'; } || echo 0 )"
+  if [ "$(printf '%s\n' "$NVIM_VER" "0.10" | sort -V | head -1)" != "0.10" ]; then
     info "Installing Neovim from GitHub releases..."
     NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
     curl -fsSL "$NVIM_URL" | sudo tar xz -C /opt
@@ -110,10 +112,13 @@ install_packages_debian() {
   fi
 
   # fzf
+  # --no-update-rc: the fzf installer would otherwise append a source line to
+  # ~/.zshrc — which, once linked, writes through the symlink into this repo.
+  # Our zshrc already sources ~/.fzf.zsh itself.
   if ! command_exists fzf; then
     info "Installing fzf..."
     git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}/.fzf"
-    "${HOME}/.fzf/install" --all --no-bash --no-fish
+    "${HOME}/.fzf/install" --key-bindings --completion --no-update-rc --no-bash --no-fish
   fi
 
   # Starship

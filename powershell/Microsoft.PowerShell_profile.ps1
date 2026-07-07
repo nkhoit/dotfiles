@@ -29,7 +29,7 @@ if ($Host.Name -eq 'ConsoleHost' -and -not $env:NVIM -and [Console]::OutputEncod
     # ----- PSFzf: fuzzy finder integration -----
     if ((Get-Command fzf -ErrorAction SilentlyContinue) -and (Import-Module PSFzf -PassThru -ErrorAction SilentlyContinue)) {
         Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r' `
-                       -AltCCommand { param($Location) [Console]::SetCursorPosition(0, [Console]::CursorTop - 1); Set-Location $Location; zoxide add -- $Location }
+                       -AltCCommand { param($Location) [Console]::SetCursorPosition(0, [Console]::CursorTop - 1); Set-Location $Location; if (Get-Command zoxide -ErrorAction SilentlyContinue) { zoxide add -- $Location } }
 
         # Tab: use fzf for completion, with fuzzy directory fallback for cd
         Set-PSReadLineKeyHandler -Key Tab -ScriptBlock {

@@ -17,7 +17,8 @@ _ensure_plugin() {
 }
 
 _ensure_plugin zsh-users/zsh-autosuggestions
-_ensure_plugin zsh-users/zsh-syntax-highlighting
+# (zsh-syntax-highlighting loads at the END of this file — upstream requires it
+# last so it can wrap all ZLE widgets after they're defined)
 
 # ---------------------------------------------------------------------------
 # History
@@ -81,6 +82,11 @@ if command -v fzf &>/dev/null; then
 fi
 
 # ---------------------------------------------------------------------------
+# zoxide (smart cd — `z` to jump to tracked dirs)
+# ---------------------------------------------------------------------------
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+
+# ---------------------------------------------------------------------------
 # Aliases
 # ---------------------------------------------------------------------------
 alias vi='nvim'
@@ -112,3 +118,8 @@ path=(${HOME}/.local/bin ${HOME}/.cargo/bin $path)
 if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"
 fi
+
+# ---------------------------------------------------------------------------
+# Syntax highlighting — MUST be sourced last (wraps existing ZLE widgets)
+# ---------------------------------------------------------------------------
+_ensure_plugin zsh-users/zsh-syntax-highlighting
