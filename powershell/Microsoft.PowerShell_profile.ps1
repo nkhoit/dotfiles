@@ -78,7 +78,8 @@ function copilot { & (Get-Command copilot.exe).Source --yolo @args }
 # ----- Linux staples (not provided by coreutils) -----
 function which { (Get-Command @args).Source }
 function mkcd { param([string]$Dir) New-Item -ItemType Directory -Path $Dir -Force | Out-Null; Set-Location $Dir }
-if (Get-Command rg -ErrorAction SilentlyContinue) { Set-Alias grep rg }
+# grep -> rg only as a fallback where coreutils' real grep isn't on PATH
+if ((Get-Command rg -ErrorAction SilentlyContinue) -and -not (Get-Command grep -CommandType Application -ErrorAction SilentlyContinue)) { Set-Alias grep rg }
 
 # ----- Git shortcuts -----
 function gs { git --no-pager status -sb @args }
@@ -131,12 +132,21 @@ function gwd {
 }
 
 # ----- Coreutils (microsoft/coreutils): prefer native UNIX commands -----
-# Installed by install.ps1. Most commands (touch, grep, find, ...) resolve straight from PATH,
-# but PowerShell aliases rm -> Remove-Item and ls -> Get-ChildItem, shadowing the native
-# binaries. Drop those aliases when coreutils is present so the real ones win. PATH resolution
-# (not Set-Alias) keeps byte-pipe behavior intact for piping into xargs/find/etc.
+# Installed by install.ps1 (winget Microsoft.Coreutils): uutils coreutils + findutils
+# + grep + xargs as one multi-call binary. Commands with no PowerShell name conflict
+# (touch, head, tail, wc, find, xargs, ...) already resolve from PATH, but PS ships
+# aliases (ls -> Get-ChildItem, cat -> Get-Content, ...) and a mkdir *function* that
+# shadow the rest. Unshadow only names that resolve to a real executable, so this
+# respects `coreutils-manager disable <util>` and is a no-op where coreutils isn't
+# installed. The cmdlets stay reachable by full name (Sort-Object, Tee-Object, ...).
 if (Get-Command coreutils-manager -ErrorAction SilentlyContinue) {
-    foreach ($shadowed in 'rm', 'ls') {
-        Remove-Alias $shadowed -Force -ErrorAction SilentlyContinue
+    foreach ($u in 'cat', 'cp', 'ls', 'mv', 'rm', 'rmdir', 'echo', 'pwd', 'sort', 'tee', 'sleep') {
+        if ((Test-Path "Alias:\$u") -and (Get-Command $u -CommandType Application -ErrorAction SilentlyContinue)) {
+            Remove-Alias $u -Force -ErrorAction SilentlyContinue
+        }
+    }
+    # mkdir is a PS function (no -p support); the coreutils one handles -p properly
+    if ((Test-Path 'Function:\mkdir') -and (Get-Command mkdir -CommandType Application -ErrorAction SilentlyContinue)) {
+        Remove-Item 'Function:\mkdir' -Force
     }
 }
