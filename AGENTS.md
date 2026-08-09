@@ -39,7 +39,7 @@ Before committing, verify:
 ├── install.ps1         # Windows bootstrap
 ├── nvim/               # Neovim — identical on all platforms
 ├── starship/           # Starship prompt — identical on all platforms
-├── ai/                 # Shared AI agent instructions (Copilot CLI + opencode)
+├── ai/                 # Shared AI agent instructions (Copilot CLI + opencode + omp)
 ├── zellij/             # Zellij — macOS/Linux only
 ├── powershell/         # PowerShell profile — Windows only
 └── zsh/                # Zsh config — macOS/Linux only

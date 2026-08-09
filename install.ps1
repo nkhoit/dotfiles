@@ -117,6 +117,22 @@ function Install-Packages {
         Write-Info "Installing PSFzf PowerShell module..."
         Install-Module -Name PSFzf -Scope CurrentUser -Force -AcceptLicense
     }
+    # omp (Oh My Pi) coding agent — not on winget, so use the vendor installer.
+    # It drops a standalone binary in %LOCALAPPDATA%\omp and adds it to the user PATH.
+    if (-not (Test-Command omp)) {
+        Write-Info "Installing omp coding agent..."
+        try {
+            Invoke-RestMethod 'https://omp.sh/install.ps1' | Invoke-Expression
+            $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' +
+                        [System.Environment]::GetEnvironmentVariable('Path', 'User')
+        } catch {
+            Write-Warn "Could not install omp: $($_.Exception.Message)"
+            Write-Warn "Install manually from https://omp.sh"
+        }
+    } else {
+        Write-Ok "omp already installed"
+    }
+
     Write-Ok "All packages installed"
 }
 
@@ -210,6 +226,13 @@ function Create-Symlinks {
     $opencodeDir = Join-Path $HOME '.config\opencode'
     if (-not (Test-Path $opencodeDir)) { New-Item -ItemType Directory -Path $opencodeDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $opencodeDir 'AGENTS.md')
+
+    # omp reads the copilot and opencode files above via its `github`/`opencode`
+    # discovery providers, but keeps only one user-scope context file. Its native
+    # provider outranks both, so link there to guarantee which copy wins.
+    $ompDir = Join-Path $HOME '.omp\agent'
+    if (-not (Test-Path $ompDir)) { New-Item -ItemType Directory -Path $ompDir -Force | Out-Null }
+    Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $ompDir 'AGENTS.md')
 }
 
 # ===========================================================================

@@ -80,7 +80,7 @@ Add an `Assisted-by` git trailer to commits where AI wrote or planned code. Only
 development, not review or exploration. Use the agent name and model, e.g.:
 
     Assisted-by: copilot-cli: gpt-5
-    Assisted-by: opencode: claude-opus-4.7
+    Assisted-by: omp: claude-opus-4.7
 
 ## My Stack
 

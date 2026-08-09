@@ -47,7 +47,7 @@ irm https://raw.githubusercontent.com/nkhoit/dotfiles/main/install.ps1 | iex
 | `zellij/config.kdl` | `~/.config/zellij/config.kdl` |
 | `zsh/.zshrc` | `~/.zshrc` |
 | `powershell/...profile.ps1` | `$PROFILE` |
-| `ai/instructions.md` | `~/.copilot/copilot-instructions.md` · `~/.config/opencode/AGENTS.md` |
+| `ai/instructions.md` | `~/.copilot/copilot-instructions.md` · `~/.config/opencode/AGENTS.md` · `~/.omp/agent/AGENTS.md` |
 
 Existing configs are backed up with a `.backup.<timestamp>` suffix before linking.
 
@@ -60,7 +60,7 @@ Existing configs are backed up with a `.backup.<timestamp>` suffix before linkin
 ├── neovide/                # Neovide GUI launch defaults
 ├── starship/               # Starship prompt config
 ├── zellij/                 # Zellij terminal multiplexer config
-├── ai/                     # Shared AI agent instructions (Copilot CLI + opencode)
+├── ai/                     # Shared AI agent instructions (Copilot CLI + opencode + omp)
 ├── powershell/             # PowerShell profile (Windows)
 └── zsh/                    # Zsh config (macOS/Linux)
 ```

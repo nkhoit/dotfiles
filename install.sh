@@ -200,6 +200,22 @@ setup_dotfiles_repo() {
 }
 
 # ---------------------------------------------------------------------------
+# omp (Oh My Pi) coding agent — same vendor installer on macOS and Linux
+# ---------------------------------------------------------------------------
+install_omp() {
+  if command_exists omp; then
+    ok "omp already installed"
+    return
+  fi
+  info "Installing omp coding agent..."
+  if curl -fsSL https://omp.sh/install | sh; then
+    ok "omp installed"
+  else
+    warn "Could not install omp — install manually from https://omp.sh"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Symlink helper
 # ---------------------------------------------------------------------------
 link_file() {
@@ -228,9 +244,14 @@ create_symlinks() {
   NEOVIDE_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/neovide"
   link_file "${DOTFILES_DIR}/neovide/config.toml"    "${NEOVIDE_CONFIG_DIR}/config.toml"
 
-  # AI agent instructions (shared by Copilot CLI and opencode)
+  # AI agent instructions (shared by Copilot CLI, opencode, and omp)
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.copilot/copilot-instructions.md"
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.config/opencode/AGENTS.md"
+
+  # omp reads the two files above via its `github`/`opencode` discovery providers,
+  # but keeps only one user-scope context file. Its native provider outranks both,
+  # so link there to guarantee which copy wins.
+  link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.omp/agent/AGENTS.md"
 }
 
 # ---------------------------------------------------------------------------
@@ -258,6 +279,7 @@ main() {
   esac
 
   setup_dotfiles_repo
+  install_omp
   create_symlinks
   set_default_shell
 
