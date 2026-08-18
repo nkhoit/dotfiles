@@ -255,6 +255,23 @@ create_symlinks() {
 }
 
 # ---------------------------------------------------------------------------
+# Shared knowledge base (iwe over MCP) — opt-in, needs tailscale + a reachable KB
+# ---------------------------------------------------------------------------
+wire_knowledge_base() {
+  [ -x "${DOTFILES_DIR}/ai/install-kb.sh" ] || return 0
+  if [ "${SKIP_KB:-0}" = "1" ]; then
+    info "Skipping knowledge base (SKIP_KB=1)"
+    return 0
+  fi
+  info "Wiring shared knowledge base..."
+  if "${DOTFILES_DIR}/ai/install-kb.sh"; then
+    ok "knowledge base wired"
+  else
+    warn "Knowledge base not wired (offline or KB down) — re-run ai/install-kb.sh later"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Set default shell to zsh
 # ---------------------------------------------------------------------------
 set_default_shell() {
@@ -281,6 +298,7 @@ main() {
   setup_dotfiles_repo
   install_omp
   create_symlinks
+  wire_knowledge_base
   set_default_shell
 
   echo ""
