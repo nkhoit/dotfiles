@@ -80,6 +80,28 @@ if [ -n "$OMP_SKILLS" ]; then
   ok 'omp skill installed'
 fi
 
+# 5c. grok — skill link + remote MCP server
+GROK_BIN=""
+if command -v grok >/dev/null 2>&1; then
+  GROK_BIN="grok"
+elif [ -x "$HOME/.grok/bin/grok" ]; then
+  GROK_BIN="$HOME/.grok/bin/grok"
+elif [ -x "$HOME/.grok/bin/grok.exe" ]; then
+  GROK_BIN="$HOME/.grok/bin/grok.exe"
+fi
+if [ -n "$GROK_BIN" ]; then
+  mkdir -p "$HOME/.grok/skills"
+  ln -sfn "$SRC" "$HOME/.grok/skills/shared-knowledge-base"
+  ok 'grok: skill linked'
+  if "$GROK_BIN" mcp add --transport http iwe "$KB_URL"; then
+    ok 'grok: mcp iwe wired'
+  else
+    warn 'grok: could not add mcp server iwe'
+  fi
+else
+  warn 'grok not found - skipping'
+fi
+
 # 6. validate yaml if python is around
 if [ -n "$CFG" ] && command -v python3 >/dev/null 2>&1; then
   python3 -c "import yaml,sys; yaml.safe_load(open('$CFG'))" 2>/dev/null \

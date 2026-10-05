@@ -74,6 +74,7 @@ if (Get-Command nvim -ErrorAction SilentlyContinue) {
 }
 
 function copilot { & (Get-Command copilot.exe).Source --yolo @args }
+function grok { & (Get-Command grok.exe).Source --yolo @args }
 
 # ----- Linux staples (not provided by coreutils) -----
 function which { (Get-Command @args).Source }
@@ -117,6 +118,14 @@ function gwcc {
     if (-not $dest) { return }
     Set-Location $dest
     copilot
+}
+
+function gwcg {
+    param([Parameter(Mandatory)][string]$Feature)
+    $dest = gwc $Feature
+    if (-not $dest) { return }
+    Set-Location $dest
+    grok
 }
 
 function gwd {

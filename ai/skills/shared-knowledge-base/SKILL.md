@@ -6,7 +6,7 @@ description: Use when you learn or need a durable technical fact.
 # Shared knowledge base (iwe)
 
 One KB shared by every agent on the tailnet: Hermes (mac, moltbot), omp (a3),
-and any MCP client. Endpoint `https://iwe.story-nessie.ts.net/mcp`.
+Grok, and any MCP client. Endpoint `https://iwe.story-nessie.ts.net/mcp`.
 Files live on node at `/mnt/user/appdata/iwe/kb`, git-backed, autopushed hourly.
 
 ## Read first
