@@ -100,7 +100,8 @@ function gwc {
     if (-not $root) { Write-Error "Not in a git repository"; return }
     $repo = Split-Path $root -Leaf
     $dest = Join-Path (Split-Path $root) "$repo-feature-$Feature"
-    git worktree add $dest -b $branch
+    # git's stdout would be returned alongside $dest and break Set-Location.
+    $null = git worktree add $dest -b $branch
     if ($LASTEXITCODE -eq 0) { $dest }
 }
 

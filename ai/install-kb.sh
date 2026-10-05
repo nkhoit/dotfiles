@@ -91,7 +91,12 @@ elif [ -x "$HOME/.grok/bin/grok.exe" ]; then
 fi
 if [ -n "$GROK_BIN" ]; then
   mkdir -p "$HOME/.grok/skills"
-  ln -sfn "$SRC" "$HOME/.grok/skills/shared-knowledge-base"
+  skill_dest="$HOME/.grok/skills/shared-knowledge-base"
+  # A real directory makes ln nest a second copy on the next run.
+  if [ -e "$skill_dest" ] && [ ! -L "$skill_dest" ]; then
+    rm -rf "$skill_dest"
+  fi
+  ln -sfn "$SRC" "$skill_dest"
   ok 'grok: skill linked'
   if "$GROK_BIN" mcp add --transport http iwe "$KB_URL"; then
     ok 'grok: mcp iwe wired'
