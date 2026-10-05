@@ -244,7 +244,7 @@ create_symlinks() {
   NEOVIDE_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/neovide"
   link_file "${DOTFILES_DIR}/neovide/config.toml"    "${NEOVIDE_CONFIG_DIR}/config.toml"
 
-  # AI agent instructions (shared by Copilot CLI, opencode, and omp)
+  # AI agent instructions (shared by Copilot CLI, opencode, omp, and Grok)
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.copilot/copilot-instructions.md"
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.config/opencode/AGENTS.md"
 
@@ -252,6 +252,11 @@ create_symlinks() {
   # but keeps only one user-scope context file. Its native provider outranks both,
   # so link there to guarantee which copy wins.
   link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.omp/agent/AGENTS.md"
+
+  # Grok has no Copilot compat scan. ~/.grok/rules/*.md is loaded as user rules
+  # in every project. If ~/.claude/CLAUDE.md is the same text, set
+  # [compat.claude] agents = false or Grok injects it twice.
+  link_file "${DOTFILES_DIR}/ai/instructions.md" "${HOME}/.grok/rules/instructions.md"
 }
 
 # ---------------------------------------------------------------------------

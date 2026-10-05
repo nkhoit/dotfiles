@@ -74,6 +74,7 @@ if (Get-Command nvim -ErrorAction SilentlyContinue) {
 }
 
 function copilot { & (Get-Command copilot.exe).Source --yolo @args }
+function grok { & (Get-Command grok.exe).Source --yolo @args }
 
 # ----- Linux staples (not provided by coreutils) -----
 function which { (Get-Command @args).Source }
@@ -99,7 +100,8 @@ function gwc {
     if (-not $root) { Write-Error "Not in a git repository"; return }
     $repo = Split-Path $root -Leaf
     $dest = Join-Path (Split-Path $root) "$repo-feature-$Feature"
-    git worktree add $dest -b $branch
+    # git's stdout would be returned alongside $dest and break Set-Location.
+    $null = git worktree add $dest -b $branch
     if ($LASTEXITCODE -eq 0) { $dest }
 }
 
@@ -117,6 +119,14 @@ function gwcc {
     if (-not $dest) { return }
     Set-Location $dest
     copilot
+}
+
+function gwcg {
+    param([Parameter(Mandatory)][string]$Feature)
+    $dest = gwc $Feature
+    if (-not $dest) { return }
+    Set-Location $dest
+    grok
 }
 
 function gwd {

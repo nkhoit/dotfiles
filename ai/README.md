@@ -13,6 +13,7 @@ Idempotent, and run automatically by `install.sh` (skip with `SKIP_KB=1`).
 |---|---|
 | Hermes | `~/.hermes/config.yaml` -> `mcp_servers.iwe`, plus the skill |
 | omp | `~/.mcp.json` -> `mcpServers.iwe`, plus the skill |
+| Grok | `~/.grok/config.toml` -> `mcp_servers.iwe`, plus a symlink to the skill |
 
 `.mcp.json` is the Claude Code convention, so Claude Code / Codex / OpenCode
 pick up the same server.

@@ -218,7 +218,7 @@ function Create-Symlinks {
     if (-not (Test-Path $profileDir)) { New-Item -ItemType Directory -Path $profileDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'powershell\Microsoft.PowerShell_profile.ps1') $PROFILE
 
-    # AI agent instructions (shared by Copilot CLI and opencode)
+    # AI agent instructions (shared by Copilot CLI, opencode, omp, and Grok)
     $copilotDir = Join-Path $HOME '.copilot'
     if (-not (Test-Path $copilotDir)) { New-Item -ItemType Directory -Path $copilotDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $copilotDir 'copilot-instructions.md')
@@ -233,6 +233,13 @@ function Create-Symlinks {
     $ompDir = Join-Path $HOME '.omp\agent'
     if (-not (Test-Path $ompDir)) { New-Item -ItemType Directory -Path $ompDir -Force | Out-Null }
     Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $ompDir 'AGENTS.md')
+
+    # Grok has no Copilot compat scan. ~/.grok/rules/*.md is loaded as user rules
+    # in every project. If ~/.claude/CLAUDE.md is the same text, set
+    # [compat.claude] agents = false or Grok injects it twice.
+    $grokRulesDir = Join-Path $HOME '.grok\rules'
+    if (-not (Test-Path $grokRulesDir)) { New-Item -ItemType Directory -Path $grokRulesDir -Force | Out-Null }
+    Link-Config (Join-Path $DotfilesDir 'ai\instructions.md') (Join-Path $grokRulesDir 'instructions.md')
 }
 
 # ===========================================================================
